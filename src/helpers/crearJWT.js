@@ -15,6 +15,7 @@ const verificarAutenticacion = async (req,res,next)=>{
                 req.UserBDD = await Usuarios.findById(id).lean().select("-password")
                 next()
             }
+
         } catch (error) {
             const e = new Error("Formato del token no válido")
             return res.status(404).json({msg:e.message})
