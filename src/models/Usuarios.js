@@ -57,9 +57,9 @@ usersSchema.methods.encrypPassword = async function(password){
     return passwordEncrypt;
 }
 
-//Verifiar el password
-usersSchema.methods.matchPassword = async function(password){
-    const response = await bcrypt.hash(password, this.password)
+// Verificar el password
+usersSchema.methods.matchPassword = async function(password) {
+    const response = await bcrypt.compare(password, this.password); 
     return response;
 }
 

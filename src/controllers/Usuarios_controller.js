@@ -1,4 +1,5 @@
-import sendMailToUser from "../config/nodemailer.js"
+import  {sendMailToUser, sendMailToRecoveryPassword } from "../config/nodemailer.js"
+import {geenrarJWT} from "../helpers/crearJWT.js"
 import Usuario from "../models/Usuarios.js"
 
 const registro = async (req, res) => {
@@ -51,6 +52,8 @@ const login = async (req,res) =>{
         if(Object.values(req.body).includes(""))return res.status(400).json({msg:"Lo sentimos debes llenar todos los campos"})
     
         const UserBDD = await Usuario.findOne ({email})
+
+
         if(UserBDD?.confirmEmail===false)
             return res.status(400).json({msg:"Lo sentimos debes validar tu cuenta"})
 
@@ -61,15 +64,68 @@ const login = async (req,res) =>{
             return res.status(400).json({msg:"Lo sentimos el password no es correcto"})
     
         //Paso 3 - Interactuar con la BDD
-        res.status(200).json(UserBDD)
+        const tokenJWT = geenrarJWT(UserBDD._id, "Usuario")
+        res.status(200).json({UserBDD, tokenJWT})
 
 }
 
+//Recuperar contraseña
 
+    const recuperarPassword = async(req,res)=>{
+        const {email} = req.body
+        if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+        const UserBDD = await Usuario.findOne({email})
+        if(!UserBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
+        const token = UserBDD.crearToken()
+        UserBDD.token=token
+        await sendMailToRecoveryPassword(email,token)
+        await UserBDD.save()
+        res.status(200).json({msg:"Revisa tu correo electrónico para reestablecer tu cuenta"})
+    }
+
+const conprobarTokenPassword = async(req, res)=>{
+
+    const {token} = req.params
+
+    if((!token)) return res.status(400).json({msg:"Lo sentimos no s epuede validar la cuenta"})
+    const UserBDD = await Usuario.findOne({token})
+    if(UserBDD?.token !== token) res.status(404).json({msg:"Lo sentimos no se puede validar la cuenta"})
+
+    await UserBDD.save()
+    res.status(200).json({msg:"Token confirmado, puedes crear tu nueva contraseña"})
+
+}
+
+const nuevoPassword = async(req, res) =>{
+    const {password, confirmpassword} = req.body
+
+    if(Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debe llenar todos los cmapos"})
+
+    if (password != confirmpassword)return res.status(404).json({msg:"Lo sentimos el password no coincide"})    
+
+    const UserBDD = await Usuario.findOne({token:req.params.token})
+    if(( UserBDD?.token !==req.params.token)) return res.status(404).json({msg:"Lo sentimos no se puede validar la cuenta"})
+
+    UserBDD.token = null
+    UserBDD.password = await UserBDD.encrypPassword(password)
+    await UserBDD.save()
+    res.status(200).json({msg:"Felicitaciones, ya puedes iniciar sesion con tu nuevo password"})
+
+
+
+}
+
+const perfilUsuario = (req,res)=>{
+    res.status(200).json({msg:"Perfil del usuario"})
+}
 
 
 export {
     registro,
     confirmEmail,
-    login
+    login,
+    recuperarPassword,
+    conprobarTokenPassword,
+    nuevoPassword,
+    perfilUsuario
 }
