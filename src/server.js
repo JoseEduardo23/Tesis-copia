@@ -2,7 +2,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors';
-import router from './routers/Usuarios_routers.js';
+import routerUser from './routers/Usuarios_routers.js'
+import routerMascotas from './routers/Paciente_routers.js'
 
 
 
@@ -26,7 +27,14 @@ app.get('/',(req,res)=>{
     res.send("Server on")
 })
 
-app.use('/api/', router)
+//Rutas para veterinarios
+
+app.use('/api/', routerUser)
+
+
+//Rutas para mascotas
+
+app.use('/api/', routerMascotas)
 
 //Rutas no encontradas
 
