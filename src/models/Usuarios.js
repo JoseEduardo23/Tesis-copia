@@ -1,6 +1,6 @@
 //Paaso 1 Modelos para administradores.
 import {Schema, model} from 'mongoose'
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 
 const usersSchema = new Schema({
     nombre:{
