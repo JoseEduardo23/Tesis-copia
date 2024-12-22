@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Registro y Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Registro y Login</h1>
+
+  <!-- Formulario de Registro -->
+  <h2>Registro</h2>
+  <form id="registroForm">
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="text" id="apellido" placeholder="Apellido" required>
+    <input type="text" id="telefono" placeholder="Telefono" required>
+    <input type="text" id="direccion" placeholder="Direccion" required>
+    <input type="email" id="emailRegistro" placeholder="Correo electrónico" required>
+    <input type="password" id="passwordRegistro" placeholder="Contraseña" required>
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="email" id="emailLogin" placeholder="Correo electrónico" required>
+    <input type="password" id="passwordLogin" placeholder="Contraseña" required>
+    <button type="submit">Iniciar sesión</button>
+  </form>
+</body>
+<script src="index.js"></script>
+</html>

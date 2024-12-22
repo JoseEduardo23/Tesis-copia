@@ -65,7 +65,12 @@ const login = async (req, res) => {
 
     //Paso 3 - Interactuar con la BDD
     const tokenJWT = geenrarJWT(UserBDD._id, "Usuario")
-    res.status(200).json({ UserBDD, tokenJWT })
+    res.status(200).json(
+        { 
+            msg: "Login exitoso",
+            user: UserBDD, 
+            token: tokenJWT 
+        })
 
 }
 
